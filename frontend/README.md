@@ -25,7 +25,7 @@
 
 ## Screenshots
 ### Desktop
-![Desktop Dashboard](./screenshots/1.png)
+<img src="./screenshots/1.png" alt="Desktop Dashboard" width="300"/>
 
 ### Mobile
-![Mobile Dashboard](./screenshots/2png)
+<img src="./screenshots/2.png" alt="Desktop Dashboard" width="300"/>
