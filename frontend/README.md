@@ -28,4 +28,4 @@
 <img src="./screenshots/1.png" alt="Desktop Dashboard" width="400"/>
 
 ### Mobile
-<img src="./screenshots/2.png" alt="Desktop Dashboard" width="300"/>
+<img src="./screenshots/2.png" alt="Desktop Dashboard" width="400"/>
