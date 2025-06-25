@@ -25,7 +25,7 @@
 
 ## Screenshots
 ### Desktop
-![Desktop Dashboard](./screenshots/mockups/1.png)
+![Desktop Dashboard](./screenshots/1.png)
 
 ### Mobile
-![Mobile Dashboard](./screenshots/mockups/2png)
+![Mobile Dashboard](./screenshots/2png)
