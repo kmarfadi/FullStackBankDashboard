@@ -24,8 +24,9 @@
 - Form validation and user feedback.
 
 ## Screenshots
-### Desktop
-<img src="./screenshots/1.png" alt="Desktop Dashboard" width="300"/>
-
-### Mobile
-<img src="./screenshots/2.png" alt="Desktop Dashboard" width="300"/>
+<table>
+  <tr>
+    <td><img src="./screenshots/dashboard-desktop.png" alt="Desktop Dashboard" width="400"/></td>
+    <td><img src="./screenshots/dashboard-mobile.png" alt="Mobile Dashboard" width="200"/></td>
+  </tr>
+</table>
