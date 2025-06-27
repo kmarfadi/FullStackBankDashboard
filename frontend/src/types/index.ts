@@ -1,129 +1,170 @@
-/**
- * Type definitions for the financial transaction application
- */
-
-export interface Person {
-  email: string;
-  id: number;
-  name: string;
-  balance: number | string; // Allow string from API
-  createdAt: string;
+// Types for props
+export interface InfoCardProps {
+  title: string;
+  icon: React.ReactNode;
+  iconColor: string;
+  mainValue: string | number;
+  mainValueColor: string;
+  subtitle: React.ReactNode;
+  footer?: string;
+  className?: string;
 }
 
-export interface Bank {
+export interface BankBalanceCardProps {
+  balance?: number;
+  lastUpdated?: string;
+}
+
+export interface AvailableAccountsProps {
+  accounts: Person[];
+  onAddTransaction?: (person: Person) => void;
+}
+
+export interface SelectedTransactionsCardProps {
+  count?: number;
+  total?: number;
+}
+
+export interface ProcessingTimeCardProps {
+  time?: number;
+  unit?: string;
+}
+
+export interface TransactionItemProps {
+  name: string;
+  amount: number;
+  date: string;
+  status: 'completed' | 'failed' | 'pending';
+}
+
+export interface ItemCardProps {
+  // Main data
+  name: string;
+  value?: number | string;
+  valueColor?: string;
+  // Simple string metadata
+  subtitle?: string;
+  statusText?: string;
+  statusColor?: string;
+  // Button props (if needed)
+  buttonText?: string;
+  onButtonClick?: () => void;
+}
+
+export interface AccountItemProps {
   id: number;
   name: string;
-  balance: number | string; // Allow string from API
+  joinDate: string;
+  balance: number;
+  onAddTransaction: (id: number) => void;
+}
+
+export interface TransactionAccountItemProps {
+  id: number;
+  name: string;
+  amount: number;
+  onAmountChange: (amount: number) => void;
+}
+
+export interface TransactionStatusProps {
+  successful: number;
+  failed: number;
+  time: number;
+}
+
+// Reusable type for amounts state
+export type AmountsMap = { [key: number]: number };
+
+export interface TransactionBuilderProps {
+  selectedPersons: Person[];
+  onTransactionsProcessed: (result: any) => void;
+  onRemovePerson: (id: number) => void;
+  amounts: AmountsMap;
+  setAmounts: React.Dispatch<React.SetStateAction<AmountsMap>>;
+}
+
+// Types based on the API responses
+export interface BankBalance {
+  balance: number;
+  timestamp: string;
+}
+
+export interface BankInfo {
+  id: number;
+  name: string;
+  balance: string;
   updatedAt: string;
 }
 
-export interface Transaction {
-  personName: string;
+export interface Person {
   id: number;
-  amount: number | string; // Allow string from API
-  status: 'pending' | 'completed' | 'failed';
+  name: string;
+  balance?: string;
+  createdAt?: string;
+}
+
+export interface Transaction {
+  id: number;
+  personId: number;
+  bankId: number;
+  amount: string;
+  status: string;
   createdAt: string;
   completedAt?: string;
-  errorMessage?: string;
   person: Person;
-  bank: Bank;
-  timestamp: string; 
+  bank: BankInfo;
 }
 
-export interface TransactionDto {
+export interface TransactionToProcess {
   personId: number;
   amount: number;
 }
 
-export interface TransactionResult {
-  transactionIndex: number;
-  personId: number;
-  amount: number;
-  status: 'completed' | 'failed';
-  error: string | null;
-}
-
-export interface ProcessingSummary {
-  total: number;
+export interface ProcessTransactionResponse {
   successful: number;
   failed: number;
-  processingTime: string;
-  finalBankBalance: number;
-}
-
-export interface ProcessingResponse {
-  summary: ProcessingSummary;
-  results: TransactionResult[];
-}
-
-export interface BatchTransactionResponse {
-  processedCount: number;
-  failedCount: number;
+  processingTime: number;
   summary: {
-    //decimal number in milliseconds
-    processingTime: number;  
+    total: number;
+    completed: number;
+    failed: number;
+    details: Array<{
+      error: any;
+      index: number;
+      status: string;
+      transaction: {
+        id: number;
+        personId: number;
+        bankId: number;
+        amount: number;
+        status: string;
+        createdAt: string;
+        completedAt: string;
+      };
+    }>;
+    processingTime: number;
   };
 }
-export interface TransactionRequest {
-  personId: number;
-  amount: number;
-}
 
-// Types
-export interface Person {
-  id: number;
-  name: string;
-  balance: number | string;
-  createdAt: string;
-}
-
-export interface Bank {
-  id: number;
-  name: string;
-  balance: number | string;
-  updatedAt: string;
-}
-
-export interface Transaction {
-  id: number;
-  amount: number | string;
-  status: 'pending' | 'completed' | 'failed';
-  createdAt: string;
-  completedAt?: string;
-  errorMessage?: string;
-  person: Person;
-  bank: Bank;
-}
-
-export interface TransactionDto {
-  personId: number;
-  amount: number;
-}
-
-export interface TransactionResult {
-  transactionIndex: number;
-  personId: number;
-  amount: number;
-  status: 'completed' | 'failed';
-  error: string | null;
+export interface TransactionDetail {
+  index: number;
+  status: 'completed' | 'failed' | 'pending';
+  transaction?: {
+    id: number;
+    personId: number;
+    bankId: number;
+    amount: number;
+    status: string;
+    createdAt: string;
+    completedAt: string;
+  };
+  error?: string;
 }
 
 export interface ProcessingSummary {
   total: number;
-  successful: number;
+  completed: number;
   failed: number;
-  processingTime: string;
-  finalBankBalance: number;
-}
-
-export interface ProcessingResponse {
-  summary: ProcessingSummary;
-  results: TransactionResult[];
-}
-
-export interface TransactionBuilderItem {
-  personId: number;
-  personName: string;
-  amount: number;
-  maxBalance: number;
+  details: TransactionDetail[];
+  processingTime?: number;
 }
