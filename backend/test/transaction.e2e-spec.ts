@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
@@ -27,7 +28,7 @@ describe('Transactions (e2e)', () => {
   it('/transactions/process (POST) - fail on insufficient balance', async () => {
     const res = await request(app.getHttpServer())
       .post('/transactions/process')
-      .send({ transactions: [{ personId: 1, amount: 9999999 }] });
+      .send({ transactions: [{ personId: 1, ammount: 99999999 }] });
     expect(res.status).toBe(400);
     expect(res.body).toHaveProperty('statusCode', 400);
     expect(res.body).toHaveProperty('message');
