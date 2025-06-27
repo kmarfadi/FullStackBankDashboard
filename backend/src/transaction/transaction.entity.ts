@@ -48,5 +48,4 @@ export class Transaction {
   @ManyToOne(() => Bank)
   @JoinColumn({ name: 'bankId' })
   bank: Bank;
-  summary?: any;
 }
