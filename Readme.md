@@ -18,12 +18,12 @@ A modern fullstack application for simulating and processing financial transacti
 
 ---
 
-## 🗂️ Monorepo Structure
+## 🗂️ Repository Structure
 
 ```
-FullstackTestOlimp/
-├── backend/      # NestJS API (TypeORM, PostgreSQL)
-└── frontend/     # React + Vite + TypeScript + Tailwind
+./
+├── backend/      # NestJS API with PostgreSQL
+└── frontend/     # React + Vite + TypeScript
 ```
 
 ---
@@ -42,7 +42,7 @@ FullstackTestOlimp/
 
 ```bash
 git clone https://github.com/kmarfadi/FullStackBankDashboard.git
-cd FullstackTestOlimp
+cd FullStackBankDashboard
 ```
 
 ---
@@ -121,6 +121,157 @@ npm run dev
 
 - Frontend: [http://localhost:5173](http://localhost:5173)
 - Backend API: [http://localhost:3000](http://localhost:3000)
+
+---
+
+## 📋 Detailed Installation Guide
+
+### Prerequisites
+
+1. **Node.js Installation**
+   - Install Node.js v18+ from [nodejs.org](https://nodejs.org/)
+   - Verify installation:
+     ```bash
+     node --version
+     npm --version
+     ```
+
+2. **PostgreSQL Setup**
+   - **Option A - Docker (Recommended)**:
+     - Install [Docker Desktop](https://www.docker.com/products/docker-desktop)
+     - Verify installation: `docker --version`
+   
+   - **Option B - Native Installation**:
+     - Install [PostgreSQL](https://www.postgresql.org/download/)
+     - Create a user and database:
+       ```sql
+       CREATE USER myuser WITH PASSWORD 'mypassword';
+       CREATE DATABASE test_bank;
+       GRANT ALL PRIVILEGES ON DATABASE test_bank TO myuser;
+       ```
+
+### Step-by-Step Setup
+
+1. **Clone & Navigate**
+   ```bash
+   git clone https://github.com/kmarfadi/FullStackBankDashboard.git
+   cd FullStackBankDashboard
+   ```
+
+2. **Database Setup**
+   ```bash
+   # From the root directory
+   docker-compose up -d
+   ```
+
+3. **Backend Setup**
+   ```bash
+   # From the root directory
+   cd backend
+   cp .env.example .env
+   npm install
+   npm run start:dev
+   ```
+
+4. **Frontend Setup**
+   ```bash
+   # Open new terminal
+   # From the root directory
+   cd frontend
+   cp .env.example .env
+   npm install
+   npm run dev
+   ```
+
+### Verification Steps
+
+1. **Check Backend Health**
+   ```bash
+   curl http://localhost:3000/bank/balance
+   # Should return: {"balance":1000000+,"timestamp":lastupdateddate}
+   ```
+
+2. **Frontend Verification**
+   - Open http://localhost:5173
+   - You should see:
+     - Bank balance card with live updates
+     - List of available accounts
+     - Transaction builder interface
+
+### Common Issues & Solutions
+
+1. **Database Connection Fails**
+   ```bash
+   # Check PostgreSQL is running
+   docker ps | grep postgres
+   
+   # Check logs
+   docker logs <container_id>
+   ```
+
+2. **CORS Issues**
+   - Verify CORS settings in `.env`:
+     ```
+     CORS_ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3001
+     ```
+
+3. **TypeScript Errors**
+   ```bash
+   # Rebuild TypeScript
+   npm run build
+   
+   # Clear TypeScript cache
+   rm -rf node_modules/.tmp
+   ```
+
+### Development Workflow
+
+1. **Running Tests**
+   ```bash
+   # Backend unit tests
+   cd backend && npm test
+   
+   # Backend e2e tests
+   npm run test:e2e
+   
+   ```
+
+2. **Database Management**
+   ```bash
+   # Reset database
+   docker-compose down -v
+   docker-compose up -d
+   
+   # View logs
+   docker-compose logs -f postgres
+   ```
+
+3. **API Development**
+   - Backend swagger docs: http://localhost:3000/api
+   - Available endpoints:
+     ```
+     GET    /bank/balance
+     GET    /persons
+     POST   /transactions/process
+     ```
+
+### Production Considerations
+
+1. **Environment Setup**
+   - Set `NODE_ENV=production`
+   - Use secure database credentials
+   - Configure proper CORS origins
+
+2. **Security Checklist**
+   - [ ] Update all dependencies
+   - [ ] Set proper CORS origins
+   - [ ] Enable rate limiting
+   - [ ] Set up proper logging
+
+3. **Performance Monitoring**
+   - Backend logs location: `backend/logs/`
+   - Monitor transaction processing times
+   - Check database query performance
 
 ---
 
