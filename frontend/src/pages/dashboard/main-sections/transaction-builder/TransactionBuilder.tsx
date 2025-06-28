@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DollarSign, X } from 'lucide-react';
 import TransactionStatus from './TransactionStatus';
 import TransactionAccountItem from './TransactionAccountItem';
@@ -15,6 +15,18 @@ const TransactionBuilder: React.FC<TransactionBuilderProps> = ({
   setAmounts
 }) => {
   const { processTransactions, loading, error, lastResult } = useProcessTransactions();
+  const [showStatus, setShowStatus] = useState(false);
+
+  // Show status for 3 seconds when transaction is processed
+  useEffect(() => {
+    if (lastResult || error) {
+      setShowStatus(true);
+      const timer = setTimeout(() => {
+        setShowStatus(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [lastResult, error]);
 
   useEffect(() => {
     const newAmounts = { ...amounts };
@@ -75,18 +87,23 @@ const TransactionBuilder: React.FC<TransactionBuilderProps> = ({
   });
 
   return (
-    <SectionCard className="flex flex-col">
+    <SectionCard className="flex flex-col relative">
       <SectionHeader icon={DollarSign} title="Transaction Builder" iconColor="text-green-600" />
       <SectionSubtitle>Configure transaction amounts and process them</SectionSubtitle>
       
-      {(lastResult || error) && (
-        <TransactionStatus
-          successful={lastResult?.summary.completed || 0}
-          failed={lastResult?.summary.failed || 0}
-          time={lastResult?.summary.processingTime || 0}
-          status={error ? 'error' : 'completed'}
-          showTrend={false}
-        />
+      {/* Absolute positioned status overlay */}
+      {showStatus && (lastResult || error) && (
+        <div className="absolute inset-0 z-10 bg-white/90 backdrop-blur-sm rounded-lg flex items-center justify-center">
+          <div className="w-full max-w-sm">
+            <TransactionStatus
+              successful={lastResult?.summary.completed || 0}
+              failed={lastResult?.summary.failed || 0}
+              time={lastResult?.summary.processingTime || 0}
+              status={error ? 'error' : 'completed'}
+              showTrend={false}
+            />
+          </div>
+        </div>
       )}
       
       {selectedPersons.length === 0 ? (
