@@ -21,7 +21,6 @@ export class SeedService implements OnModuleInit {
     try {
       this.logger.log('🌱 Starting database seeding...');
 
-      // Seed persons with initial balances
       const existingPersons = await this.personService.findAll();
 
       if (existingPersons.length === 0) {
@@ -40,7 +39,6 @@ export class SeedService implements OnModuleInit {
         this.logger.log('✅ Created mock persons with balances');
       }
 
-      // Ensure bank exists
       await this.bankService.findOne();
       this.logger.log('✅ Bank initialized');
 
