@@ -39,7 +39,7 @@ A modern fullstack application for simulating and processing financial transacti
 ## 📁 Repository Structure
 
 ```
-FullstackTestOlimp/
+FullstackBankDashboard/
 ├── backend/                 # NestJS API with PostgreSQL
 │   ├── src/
 │   │   ├── bank/           # Bank operations
@@ -92,8 +92,8 @@ docker-compose up -d
 ### 🗄️ Database Information
 
 The Docker setup will automatically:
-- Create PostgreSQL database named `fullstack_olimp`
-- Create user `postgres` with password `mysecretpassword`
+- Create PostgreSQL database named `test_bank`
+- Create user `postgres` with password `1234`
 - Run database migrations and seed initial data
 - Set up all required tables (person, bank, transaction)
 
@@ -179,7 +179,7 @@ docker-compose down -v
 docker-compose up -d postgres
 
 # Or use your local PostgreSQL instance
-# Create database: fullstack_olimp
+# Create database: test_bank
 # User: postgres, Password: mysecretpassword
 ```
 
@@ -322,7 +322,7 @@ npm run test:e2e     # Run E2E tests
 
 #### Backend (.env)
 ```env
-DB_STRING=postgres://postgres:mysecretpassword@localhost:5432/fullstack_olimp
+DB_STRING=postgres://postgres:mysecretpassword@localhost:5432/test_bank
 PORT=3000
 NODE_ENV=development
 ```
@@ -343,7 +343,7 @@ services:
   postgres:
     image: postgres:15
     environment:
-      POSTGRES_DB: fullstack_olimp
+      POSTGRES_DB: test_bank
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: mysecretpassword
     ports:
@@ -358,7 +358,7 @@ services:
     depends_on:
       - postgres
     environment:
-      DB_STRING: postgres://postgres:mysecretpassword@postgres:5432/fullstack_olimp
+      DB_STRING: postgres://postgres:mysecretpassword@postgres:5432/test_bank
 
   frontend:
     build: ./frontend
@@ -462,7 +462,8 @@ If you encounter any issues or have questions:
 1. Check the [Troubleshooting](#troubleshooting-if-something-goes-wrong) section
 2. Review the [API Documentation](#api-documentation)
 3. Open an issue on GitHub
-4. Contact the development team
+4. **Contact me directly**: [khalifahmarfadi@gmail.com](mailto:khalifahmarfadi@gmail.com)
+
 
 ---
 
