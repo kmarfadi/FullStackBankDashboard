@@ -459,8 +459,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 If you encounter any issues or have questions:
 
-1. Check the [Troubleshooting](#troubleshooting-if-something-goes-wrong) section
-2. Review the [API Documentation](#api-documentation)
+1. Check the [Troubleshooting](#troubleshooting-if-something-goes-wrong) section above
+2. Review the [API Documentation](https://github.com/kmarfadi/FullStackBankDashboard/blob/main/backend/README.md)
 3. Open an issue on GitHub
 4. **Contact me directly**: [khalifahmarfadi@gmail.com](mailto:khalifahmarfadi@gmail.com)
 
