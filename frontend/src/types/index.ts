@@ -63,13 +63,9 @@ export interface TransactionAccountItemProps {
   id: number;
   name: string;
   amount: number;
+  balance: number;
+  invalid: boolean;
   onAmountChange: (amount: number) => void;
-}
-
-export interface TransactionStatusProps {
-  successful: number;
-  failed: number;
-  time: number;
 }
 
 // Reusable type for amounts state
@@ -77,13 +73,12 @@ export type AmountsMap = { [key: number]: number };
 
 export interface TransactionBuilderProps {
   selectedPersons: Person[];
-  onTransactionsProcessed: (result: any) => void;
+  onTransactionsProcessed: (result: ProcessTransactionResponse) => void;
   onRemovePerson: (id: number) => void;
   amounts: AmountsMap;
   setAmounts: React.Dispatch<React.SetStateAction<AmountsMap>>;
 }
 
-// Types based on the API responses
 export interface BankBalance {
   balance: number;
   timestamp: string;
@@ -129,7 +124,7 @@ export interface ProcessTransactionResponse {
     completed: number;
     failed: number;
     details: Array<{
-      error: any;
+      error: unknown;
       index: number;
       status: string;
       transaction: {
@@ -148,7 +143,7 @@ export interface ProcessTransactionResponse {
 
 export interface TransactionDetail {
   index: number;
-  status: 'completed' | 'failed' | 'pending';
+  status: string;
   transaction?: {
     id: number;
     personId: number;
@@ -158,7 +153,7 @@ export interface TransactionDetail {
     createdAt: string;
     completedAt: string;
   };
-  error?: string;
+  error?: unknown;
 }
 
 export interface ProcessingSummary {
@@ -167,4 +162,10 @@ export interface ProcessingSummary {
   failed: number;
   details: TransactionDetail[];
   processingTime?: number;
+}
+
+export interface ProcessingTimeCardProps {
+  lastResult?: {
+    summary: ProcessingSummary;
+  } | null;
 }

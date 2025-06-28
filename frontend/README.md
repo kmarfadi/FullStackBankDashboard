@@ -1,54 +1,113 @@
-# React + TypeScript + Vite
+# Frontend — React App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+This is the frontend for the Fullstack Financial Transactions App. It is built with React, Vite, and TypeScript, and provides a modern UI for sending transactions, viewing the bank balance, and tracking transaction history in real time.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Select multiple persons and amounts for transactions
+- Send batch transactions to the backend
+- Real-time polling for bank balance
+- Transaction log with status (success/failure)
+- Form validation and user feedback
+- Responsive, modern UI (Tailwind CSS)
+- TypeScript strict mode enabled
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+---
+
+## File Structure
+
+```
+frontend/
+├── Dockerfile                # Docker build for frontend service
+├── package.json              # Frontend dependencies and scripts
+├── tsconfig.json             # TypeScript config (strict mode)
+├── vite.config.ts            # Vite config
+├── src/
+│   ├── App.tsx               # Main app component
+│   ├── main.tsx              # Entry point
+│   ├── components/           # UI components (BankBalance, PersonSelector, etc.)
+│   ├── hooks/                # Custom React hooks
+│   ├── lib/                  # Utility functions
+│   ├── pages/                # Main pages (Home, etc.)
+│   ├── services/             # API service
+│   ├── types/                # TypeScript types
+│   └── ui/                   # Shared UI components (InfoCard, etc.)
+├── public/                   # Static assets
+├── tailwind.config.js        # Tailwind CSS config
+└── ...
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Setup Instructions
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+### 1. Prerequisites
+- Node.js v18+
+- Backend API running (see backend/README.md)
+
+### 2. Install Dependencies
+```bash
+cd frontend
+npm install
 ```
+
+### 3. Start the Frontend
+```bash
+npm run dev
+```
+- The app will be available at [http://localhost:5173](http://localhost:5173)
+
+### 4. Build for Production
+```bash
+npm run build
+```
+
+---
+
+## Main UI Features
+
+- **Bank Balance:** Real-time updates via polling
+- **Person Selector:** Choose multiple persons for transactions
+- **Transaction Form:** Enter amounts and send batch transactions
+- **Transaction History:** View recent transactions and their statuses
+- **Processing Time:** See how long batch processing takes (optional)
+
+---
+
+## API Usage Example
+
+- The frontend communicates with the backend at `/transactions`:
+  - **POST /transactions**
+    - Request:
+      ```json
+      [
+        { "personId": 1, "amount": 100 },
+        { "personId": 2, "amount": 200 }
+      ]
+      ```
+    - Response:
+      ```json
+      [
+        { "success": true, "txId": 1 },
+        { "success": false, "error": "Insufficient funds" }
+      ]
+      ```
+
+---
+
+## Troubleshooting
+
+- **Backend not running:** Ensure the backend API is started and accessible.
+- **API errors:** Check the browser console and network tab for error messages.
+- **Port conflicts:** Change the frontend port in `vite.config.ts` if needed.
+- **TypeScript errors:** Ensure you are using Node.js v18+ and have installed all dependencies.
+
+---
+
+## License
+
+MIT

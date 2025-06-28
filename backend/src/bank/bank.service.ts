@@ -19,7 +19,7 @@ export class BankService {
       bank = this.bankRepository.create({
         id: 1,
         name: 'Bank',
-        balance: 1000000, // Start with 1M balance
+        balance: 1000000,
       });
       await this.bankRepository.save(bank);
     }

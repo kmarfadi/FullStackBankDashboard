@@ -29,7 +29,7 @@ export class AppController {
       url: process.env.DATABASE_URL,
       entities: [Person, Bank, Transaction],
       synchronize: true,
-      logging: false, // Set to true for debugging
+      logging: false,
       autoLoadEntities: true,
     }),
     TransactionModule,
@@ -37,6 +37,6 @@ export class AppController {
     BankModule,
   ],
   providers: [SeedService],
-  controllers: [AppController], // Register AppController
+  controllers: [AppController],
 })
 export class AppModule {}

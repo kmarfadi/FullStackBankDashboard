@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { BankBalance, Person, Transaction, ProcessTransactionResponse, TransactionToProcess } from '../types';
-// Axios setup
+import { API_CONFIG } from '../lib/constants';
+
 const api = axios.create({
-  baseURL: import.meta.env.BASE_API_URL || 'http://localhost:3000',
-  timeout: 10000,
+  baseURL: API_CONFIG.BASE_URL,
+  timeout: API_CONFIG.TIMEOUT,
   headers: { 'Content-Type': 'application/json' },
 });
 
@@ -16,7 +17,6 @@ api.interceptors.response.use(
   }
 );
 
-// Generic hook for GET requests
 const useApiData = <T>(endpoint: string, initialData: T) => {
   const [data, setData] = useState<T>(initialData);
   const [loading, setLoading] = useState(true);
@@ -45,33 +45,28 @@ const useApiData = <T>(endpoint: string, initialData: T) => {
   return { data, loading, error, refetch: fetchData };
 };
 
-// Bank balance hook with built-in polling
 export const useBankBalance = () => {
   const { data, loading, error, refetch } = useApiData<BankBalance>('/bank/balance', { balance: 0, timestamp: '' });
 
   useEffect(() => {
     const interval = setInterval(() => {
       refetch();
-    }, 3000);
+    }, API_CONFIG.POLLING_INTERVAL);
     return () => clearInterval(interval);
         }, [refetch]);
 
   return { data, loading, error, refetch };
 };
 
-// All persons/accounts
 export const useAvailableAccounts = () =>
   useApiData<Person[]>('/persons', []);
 
-// All transactions
 export const useTransactions = () => 
   useApiData<Transaction[]>('/transactions', []);
 
-// Recent transactions (customize as needed)
 export const useRecentTransactions = () => 
   useApiData<Transaction[]>('/transactions', []);
 
-// Single person by ID
 export const usePerson = (id: number | null) => {
   const [data, setData] = useState<Person | null>(null);
   const [loading, setLoading] = useState(false);
@@ -97,7 +92,6 @@ export const usePerson = (id: number | null) => {
   return { data, loading, error, refetch: () => id && fetchPerson(id) };
 };
 
-// Process transactions (POST)
 export const useProcessTransactions = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -129,7 +123,6 @@ export const useProcessTransactions = () => {
   };
 };
 
-// Live updates polling hook
 export const useLiveUpdates = (refetchFunctions: (() => void)[], interval = 5000) => {
   const [isLive, setIsLive] = useState(false);
 
