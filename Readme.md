@@ -1,5 +1,11 @@
 # 🚀 Fullstack Financial Transactions Dashboard
 
+> **⚠️ NOTE: This README is for the `websocket` branch only.**
+>
+> Features, setup, and instructions here apply to the WebSocket-enabled version of the app. The main branch may differ (e.g., uses polling instead of WebSockets, different architecture, etc.).
+>
+> If you want the standard/polling version, check out the `main` branch and its README.
+
 A modern fullstack application for simulating and processing financial transactions, built with NestJS (backend), React (frontend), and PostgreSQL.
 
 [![React](https://img.shields.io/badge/React-18.2.0-blue.svg)](https://reactjs.org/)
