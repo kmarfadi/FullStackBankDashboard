@@ -83,11 +83,18 @@ docker-compose up -d
 # 3. That's it! 🎉
 ```
 
+### 🟢 If you want to be sure you're running the latest code (no cache)
+If you've changed any code, Dockerfile, or dependencies, or if you suspect Docker is running an old version, use:
+```bash
+docker-compose build --no-cache && docker-compose up -d
+```
+This will force Docker to rebuild everything from scratch and ensure you're running the latest version.
+
 ### 🌐 Access the Application
 
 - **Frontend Dashboard**: http://localhost:5173
 - **Backend API**: http://localhost:3000
-- **Database**: localhost:5432 (postgres/mysecretpassword)
+- **Database**: localhost:5433 (postgres/1234)
 
 ### 🗄️ Database Information
 
@@ -161,6 +168,12 @@ docker-compose down
 
 # Stop and remove everything (including database data)
 docker-compose down -v
+```
+
+#### Code changes not showing up?
+Always use the no-cache build command after code or dependency changes:
+```bash
+docker-compose build --no-cache && docker-compose up -d
 ```
 
 ---
@@ -317,7 +330,6 @@ npm run start:prod   # Start production server
 npm run test         # Run unit tests
 npm run test:e2e     # Run E2E tests
 ```
-
 ### Environment Variables
 
 #### Backend (.env)
@@ -468,3 +480,4 @@ If you encounter any issues or have questions:
 ---
 
 **Made with ❤️ by [kmarfadi](https://github.com/kmarfadi)**
+

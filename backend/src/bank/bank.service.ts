@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Bank } from './bank.entity';
+import { DashboardGateway } from '../websocket/websocket.gateway';
 
 @Injectable()
 export class BankService {
@@ -10,6 +11,7 @@ export class BankService {
   constructor(
     @InjectRepository(Bank)
     private bankRepository: Repository<Bank>,
+    private dashboardGateway: DashboardGateway,
   ) {}
 
   async findOne(): Promise<Bank> {
@@ -30,7 +32,16 @@ export class BankService {
   async updateBalance(amount: number): Promise<Bank> {
     await this.bankRepository.increment({ id: 1 }, 'balance', amount);
     await this.bankRepository.update({ id: 1 }, { updatedAt: new Date() });
-    return this.findOne();
+
+    const updatedBank = await this.findOne();
+
+    // Broadcast bank balance update via WebSocket
+    this.dashboardGateway.broadcastBankBalanceUpdate(
+      Number(updatedBank.balance),
+      updatedBank.updatedAt.toISOString(),
+    );
+
+    return updatedBank;
   }
 
   async getCurrentBalance(): Promise<number> {

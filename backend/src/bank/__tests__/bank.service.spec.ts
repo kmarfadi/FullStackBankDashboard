@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { BankService } from '../bank.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Bank } from '../bank.entity';
+import { DashboardGateway } from '../../websocket/websocket.gateway';
 
 const mockBankRepository = () => ({
   findOne: jest.fn(),
@@ -10,6 +11,10 @@ const mockBankRepository = () => ({
   increment: jest.fn(),
   update: jest.fn(),
 });
+
+const mockDashboardGateway = {
+  broadcastBankBalanceUpdate: jest.fn(),
+};
 
 describe('BankService', () => {
   let service: BankService;
@@ -20,6 +25,7 @@ describe('BankService', () => {
       providers: [
         BankService,
         { provide: getRepositoryToken(Bank), useFactory: mockBankRepository },
+        { provide: DashboardGateway, useValue: mockDashboardGateway },
       ],
     }).compile();
     service = module.get<BankService>(BankService);

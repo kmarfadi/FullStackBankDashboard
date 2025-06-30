@@ -5,6 +5,12 @@ import { Transaction } from '../transaction.entity';
 import { PersonService } from '../../person/person.service';
 import { BankService } from '../../bank/bank.service';
 import { DataSource } from 'typeorm';
+import { DashboardGateway } from '../../websocket/websocket.gateway';
+
+const mockDashboardGateway = {
+  broadcastTransactionCreated: jest.fn(),
+  broadcastTransactionsProcessed: jest.fn(),
+};
 
 describe('TransactionService', () => {
   let service: TransactionService;
@@ -55,6 +61,7 @@ describe('TransactionService', () => {
             }),
           },
         },
+        { provide: DashboardGateway, useValue: mockDashboardGateway },
       ],
     }).compile();
     service = module.get<TransactionService>(TransactionService);
@@ -67,6 +74,7 @@ describe('TransactionService', () => {
       }
     ).transactionRepository = transactionRepository;
     const result = await service.findAll();
+    console.log('findAll result:', result);
     expect(result).toEqual([]);
   });
 
@@ -78,6 +86,7 @@ describe('TransactionService', () => {
     const result = await service.processTransactions(
       dto as unknown as Parameters<typeof service.processTransactions>[0],
     );
+    console.log('processTransactions result:', result);
     expect(result).toHaveProperty('summary');
     expect(result.summary.total).toBe(1);
   });

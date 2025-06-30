@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { DollarSign, X } from 'lucide-react';
 import TransactionStatus from './TransactionStatus';
 import TransactionAccountItem from './TransactionAccountItem';
-import { useProcessTransactions } from '@/hooks/useApi';
+import { useProcessTransactions } from '@/hooks/useApiNoPolling';
 import { TransactionBuilderProps } from '@/types';
 import { SectionCard, SectionHeader, SectionSubtitle, PrimaryButton, EmptyState } from '@/components/index';
 import { TRANSACTION_CONFIG } from '@/lib/constants';

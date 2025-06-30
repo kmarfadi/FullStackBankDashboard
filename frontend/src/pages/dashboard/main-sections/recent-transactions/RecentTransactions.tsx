@@ -20,8 +20,8 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ data }) => {
         {transactions.length > 0 ? (
           transactions.slice(0, TRANSACTION_CONFIG.MAX_RECENT_TRANSACTIONS).map((transaction, index) => (
             <TransactionItem
-              key={index}
-              name={transaction.person.name}
+              key={transaction.id || index}
+              name={transaction.person?.name || `Account ${transaction.personId}`}
               amount={Number(transaction.amount)}
               date={transaction.createdAt}
               status={transaction.status as 'completed' | 'failed' | 'pending'}

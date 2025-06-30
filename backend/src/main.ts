@@ -35,7 +35,7 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
       transform: true,
       transformOptions: {
-        enableImplicitConversion: true, 
+        enableImplicitConversion: true,
       },
     }),
   );
@@ -44,6 +44,9 @@ async function bootstrap() {
   await app.listen(port);
 
   logger.log(`🚀 Application is running on: http://localhost:${port}`);
+  logger.log(
+    `🔌 WebSocket Gateway is available on: ws://localhost:${port}/dashboard`,
+  );
   logger.log(`🌐 CORS enabled for: ${allowedOrigins.join(', ')}`);
 }
 

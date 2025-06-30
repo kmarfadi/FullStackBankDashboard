@@ -6,19 +6,19 @@ import RecentTransactions from "./main-sections/recent-transactions/RecentTransa
 import AvailableAccounts from "./main-sections/availible-accounts/AvailibleAccounts";
 import TransactionBuilder from "./main-sections/transaction-builder/TransactionBuilder";
 import { Person, ProcessTransactionResponse } from "@/types";
-import { useAvailableAccounts, useRecentTransactions, useBankBalance } from "@/hooks/useApi";
-
-//const POLL_INTERVAL = 3000;
+import { useDashboard } from "../../context/DashboardContext";
+import Header from "@/components/Header";
 
 const Dashboard: React.FC = React.memo(() => {
     const [selectedPersons, setSelectedPersons] = useState<Person[]>([]);
     const [lastResult, setLastResult] = useState<ProcessTransactionResponse | null>(null);
     const [amounts, setAmounts] = useState<{[key: number]: number}>({});
 
-    // Hooks for data and refetch
-    const { data: accounts, refetch: refetchAccounts } = useAvailableAccounts();
-    const { data: recentTransactions, refetch: refetchRecentTransactions } = useRecentTransactions();
-    const { refetch: refetchBankBalance } = useBankBalance();
+    // Centralized data from context
+    const { 
+        accounts, 
+        transactions
+    } = useDashboard();
 
     const handleAddTransaction = useCallback((person: Person) => {
         if (!selectedPersons.some(p => p.id === person.id)) {
@@ -35,10 +35,9 @@ const Dashboard: React.FC = React.memo(() => {
     const handleTransactionsProcessed = useCallback((result: ProcessTransactionResponse) => {
         setLastResult(result);
         setSelectedPersons([]);
-        refetchRecentTransactions();
-        refetchAccounts();
-        refetchBankBalance();
-    }, [refetchRecentTransactions, refetchAccounts, refetchBankBalance]);
+        // Context will handle real-time updates automatically
+        console.log('🔄 Transaction processed, context will handle updates');
+    }, []);
 
     // Calculate total selected amount using amounts state
     const totalSelectedAmount = useMemo(() => 
@@ -48,12 +47,7 @@ const Dashboard: React.FC = React.memo(() => {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen text-gray-800 p-9 m-6">
-            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 text-center">
-                Financial Transaction Dashboard
-            </h1>
-            <p className="max-w-5xl text-xs md:text-base text-gray-400 mb-8 text-center">
-                This dashboard provides a real-time overview of financial transactions, including bank balances, processing times, and recent activity.
-            </p>
+            <Header />
             <div className="w-full max-w-7xl">
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
                     <BankBalanceCard />
@@ -73,7 +67,7 @@ const Dashboard: React.FC = React.memo(() => {
                         amounts={amounts}
                         setAmounts={setAmounts}
                     />
-                    <RecentTransactions data={recentTransactions} />
+                    <RecentTransactions data={transactions} />
                 </div>
             </div>
         </div>

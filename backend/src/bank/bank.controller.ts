@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Post,
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
@@ -34,6 +35,23 @@ export class BankController {
     } catch (error) {
       this.logger.error('Failed to fetch bank balance', error);
       throw new InternalServerErrorException('Failed to fetch bank balance');
+    }
+  }
+
+  @Post('test-update')
+  async testBalanceUpdate(): Promise<{ message: string; balance: number }> {
+    try {
+      // Add a small amount to trigger an update
+      const updatedBank = await this.bankService.updateBalance(1);
+      return {
+        message: 'Bank balance updated successfully',
+        balance: Number(updatedBank.balance),
+      };
+    } catch (error) {
+      this.logger.error('Failed to test bank balance update', error);
+      throw new InternalServerErrorException(
+        'Failed to test bank balance update',
+      );
     }
   }
 }

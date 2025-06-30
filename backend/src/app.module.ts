@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TransactionModule } from './transaction/transaction.module';
 import { PersonModule } from './person/person.module';
 import { BankModule } from './bank/bank.module';
+import { WebSocketModule } from './websocket/websocket.module';
 import { SeedService } from './common/database/seeds/seed.service';
 import { Person } from './person/person.entity';
 import { Bank } from './bank/bank.entity';
@@ -35,6 +36,7 @@ export class AppController {
     TransactionModule,
     PersonModule,
     BankModule,
+    WebSocketModule,
   ],
   providers: [SeedService],
   controllers: [AppController],

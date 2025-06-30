@@ -21,10 +21,10 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   fullWidth = false,
   className = '',
 }) => {
-  const baseClasses = 'font-medium rounded transition-colors duration-200';
+  const baseClasses = 'font-medium rounded-lg transition-colors duration-200';
   
   const variantClasses = {
-    primary: 'bg-blue-600 hover:bg-blue-700 text-white disabled:bg-gray-300 disabled:text-gray-400',
+    primary: 'bg-blue-600 hover:bg-green-700 text-white disabled:bg-gray-300 disabled:text-gray-400',
     danger: 'bg-red-600 hover:bg-red-700 text-white disabled:bg-gray-300 disabled:text-gray-400',
     secondary: 'bg-gray-600 hover:bg-gray-700 text-white disabled:bg-gray-300 disabled:text-gray-400',
   };

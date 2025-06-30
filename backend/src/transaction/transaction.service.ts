@@ -4,6 +4,7 @@ import { Repository, DataSource } from 'typeorm';
 import { Transaction, TransactionStatus } from './transaction.entity';
 import { PersonService } from '../person/person.service';
 import { BankService } from '../bank/bank.service';
+import { DashboardGateway } from '../websocket/websocket.gateway';
 import {
   ProcessTransactionsDto,
   TransactionDto,
@@ -35,6 +36,7 @@ export class TransactionService {
     private transactionRepository: Repository<Transaction>,
     private personService: PersonService,
     private bankService: BankService,
+    private dashboardGateway: DashboardGateway,
     private dataSource: DataSource,
   ) {}
 
@@ -74,6 +76,25 @@ export class TransactionService {
 
       const saved = await queryRunner.manager.save(Transaction, transaction);
       await queryRunner.commitTransaction();
+
+      // Broadcast WebSocket events
+      const transactionWithRelations = await this.transactionRepository.findOne({
+        where: { id: saved.id },
+        relations: ['person', 'bank'],
+      });
+      
+      if (transactionWithRelations) {
+        this.dashboardGateway.broadcastTransactionCreated(transactionWithRelations);
+      }
+      
+      this.dashboardGateway.broadcastAccountUpdate(person);
+
+      // Get updated bank balance and broadcast
+      const updatedBalance = await this.bankService.getCurrentBalance();
+      this.dashboardGateway.broadcastBankBalanceUpdate(
+        updatedBalance,
+        new Date().toISOString(),
+      );
 
       return saved;
     } catch (error) {
@@ -117,6 +138,9 @@ export class TransactionService {
     }
 
     summary.processingTime = Math.round(performance.now() - start); // <-- More precise
+
+    // Broadcast final summary to all connected clients
+    this.dashboardGateway.broadcastTransactionsProcessed(summary);
 
     return { summary };
   }
