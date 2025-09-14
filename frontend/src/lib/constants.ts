@@ -1,6 +1,7 @@
 export const API_CONFIG = {
   TIMEOUT: 10000,
   BASE_URL: import.meta.env.BASE_API_URL || 'http://localhost:3000',
+  SSE_ENDPOINT: '/sse/events',
 } as const;
 
 export const TRANSACTION_CONFIG = {

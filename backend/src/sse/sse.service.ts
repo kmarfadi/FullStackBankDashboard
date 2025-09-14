@@ -1,52 +1,48 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Observable, Subject } from 'rxjs';
 import { MessageEvent } from '@nestjs/common';
-
-export interface BankBalanceEvent {
-  type: 'bank_balance';
-  data: {
-    balance: number;
-    timestamp: string;
-  };
-}
+import { SSEMessage, BankBalanceSSEData, TransactionSSEData, AccountSSEData } from './sse.types';
 
 @Injectable()
 export class SSEService {
   private readonly logger = new Logger(SSEService.name);
   private readonly eventSubject = new Subject<MessageEvent>();
 
- 
   getEventStream(): Observable<MessageEvent> {
     return this.eventSubject.asObservable();
   }
 
-  sendBankBalanceUpdate(balance: number): void {
-    this.logger.log(`Sending bank balance update: ${balance}`);
+
+  private sendEvent(type: SSEMessage['type'], data: any): void {
+    this.logger.log(`Sending ${type} event`);
     
+    const message: SSEMessage = {
+      type,
+      data,
+      timestamp: new Date().toISOString(),
+    };
+
     const event: MessageEvent = {
-      data: JSON.stringify({
-        type: 'bank_balance',
-        data: {
-          balance,
-          timestamp: new Date().toISOString(),
-        },
-      }),
+      data: JSON.stringify(message),
     };
 
     this.eventSubject.next(event);
   }
 
-  sendEvent(type: string, data: any): void {
-    this.logger.log(`Sending ${type} event`);
-    
-    const event: MessageEvent = {
-      data: JSON.stringify({
-        type,
-        data,
-        timestamp: new Date().toISOString(),
-      }),
+  sendBankBalanceUpdate(balance: number): void {
+    this.logger.log(`Sending bank balance update: ${balance}`);
+    const data: BankBalanceSSEData = { 
+      balance, 
+      timestamp: new Date().toISOString() 
     };
+    this.sendEvent('bank_balance', data);
+  }
 
-    this.eventSubject.next(event);
+  sendTransactionUpdate(transaction: TransactionSSEData): void {
+    this.sendEvent('transaction', transaction);
+  }
+
+  sendAccountUpdate(account: AccountSSEData): void {
+    this.sendEvent('account_update', account);
   }
 }

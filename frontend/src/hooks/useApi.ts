@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { BankBalance, Person, Transaction, ProcessTransactionResponse, TransactionToProcess } from '../types';
 import { API_CONFIG } from '../lib/constants';
-import { useSSE } from './useSSE';
+import { useSSE, BankBalanceSSEData } from './useSSE';
 
 const api = axios.create({
   baseURL: API_CONFIG.BASE_URL,
@@ -71,9 +71,10 @@ export const useBankBalance = () => {
   // SSE for real-time updates
   useSSE((message) => {
     if (message.type === 'bank_balance') {
+      const bankData = message.data as BankBalanceSSEData;
       setData({
-        balance: message.data.balance,
-        timestamp: message.data.timestamp,
+        balance: bankData.balance,
+        timestamp: bankData.timestamp,
       });
     }
   });
