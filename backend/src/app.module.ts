@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TransactionModule } from './transaction/transaction.module';
 import { PersonModule } from './person/person.module';
 import { BankModule } from './bank/bank.module';
+import { SSEModule } from './sse/sse.module';
 import { SeedService } from './common/database/seeds/seed.service';
 import { Person } from './person/person.entity';
 import { Bank } from './bank/bank.entity';
@@ -32,6 +33,7 @@ export class AppController {
       logging: false,
       autoLoadEntities: true,
     }),
+    SSEModule,
     TransactionModule,
     PersonModule,
     BankModule,
