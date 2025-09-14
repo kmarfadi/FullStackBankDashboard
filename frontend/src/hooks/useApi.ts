@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { BankBalance, Person, Transaction, ProcessTransactionResponse, TransactionToProcess } from '../types';
 import { API_CONFIG } from '../lib/constants';
+import { useSSE } from './useSSE';
 
 const api = axios.create({
   baseURL: API_CONFIG.BASE_URL,
@@ -46,16 +47,42 @@ const useApiData = <T>(endpoint: string, initialData: T) => {
 };
 
 export const useBankBalance = () => {
-  const { data, loading, error, refetch } = useApiData<BankBalance>('/bank/balance', { balance: 0, timestamp: '' });
+  const [data, setData] = useState<BankBalance>({ balance: 0, timestamp: '' });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Initial fetch
+  const fetchData = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response: AxiosResponse<BankBalance> = await api.get('/bank/balance');
+      setData(response.data);
+    } catch (err) {
+      const message = err instanceof AxiosError 
+        ? err.response?.data?.message || err.message 
+        : 'Unknown error';
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // SSE for real-time updates
+  useSSE((message) => {
+    if (message.type === 'bank_balance') {
+      setData({
+        balance: message.data.balance,
+        timestamp: message.data.timestamp,
+      });
+    }
+  });
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      refetch();
-    }, API_CONFIG.POLLING_INTERVAL);
-    return () => clearInterval(interval);
-        }, [refetch]);
+    fetchData();
+  }, [fetchData]);
 
-  return { data, loading, error, refetch };
+  return { data, loading, error, refetch: fetchData };
 };
 
 export const useAvailableAccounts = () =>

@@ -1,5 +1,4 @@
 export const API_CONFIG = {
-  POLLING_INTERVAL: 3000,
   TIMEOUT: 10000,
   BASE_URL: import.meta.env.BASE_API_URL || 'http://localhost:3000',
 } as const;
@@ -27,7 +26,6 @@ export const TRANSACTION_STATUS = {
 
 export type TransactionStatus = typeof TRANSACTION_STATUS[keyof typeof TRANSACTION_STATUS];
 
-export const POLL_INTERVAL = 3000;
 export const MAX_TRANSACTIONS_DISPLAY = 10;
 export const DEFAULT_TRANSACTION_AMOUNT = 10;
 export const CURRENCY_SYMBOL = '$';
