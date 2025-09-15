@@ -1,9 +1,11 @@
 import { Wallet, AlertCircle } from 'lucide-react';
 import InfoCard from '@/components/InfoCard';
 import { useBankBalance } from '@/hooks/useApi';
+import { useSSE } from '@/hooks/useSSE';
 
 const BankBalanceCard: React.FC = () => {
   const { data, error } = useBankBalance();
+  const { isConnected } = useSSE();
 
   if (error) {
     return (
@@ -46,8 +48,8 @@ const BankBalanceCard: React.FC = () => {
       mainValueColor="text-green-600"
       subtitle={
         <div className="flex items-center gap-1">
-          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-          <span>Live updates</span>
+          <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></div>
+          <span>{isConnected ? 'SSE Connected' : 'SSE Disconnected'}</span>
         </div>
       }
       footer={`Marfadi Bank - Updated: ${data?.timestamp ? formatTime(data.timestamp) : 'Never'}`}

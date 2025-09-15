@@ -20,13 +20,13 @@ const SSEStatus: React.FC = () => {
             isConnected ? 'bg-green-500' : 'bg-red-500'
           }`} />
           <span>
-            {isConnected ? 'Live Updates' : 'Disconnected'}
+            {isConnected ? 'SSE Connected' : 'SSE Disconnected'}
           </span>
           {error && (
             <button 
               onClick={reconnect}
               className="ml-2 text-xs underline hover:no-underline focus:outline-none"
-              title="Reconnect to live updates"
+              title="Reconnect to SSE stream"
             >
               Reconnect
             </button>

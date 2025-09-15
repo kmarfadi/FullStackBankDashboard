@@ -33,41 +33,43 @@ export const useSSE = (onMessage?: (message: SSEMessage) => void) => {
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
+  const onMessageRef = useRef(onMessage);
 
-  const handleMessage = useCallback((event: MessageEvent) => {
-    try {
-      const message: SSEMessage = JSON.parse(event.data);
-      onMessage?.(message);
-    } catch (err) {
-      console.error('Failed to parse SSE message:', err);
-      setError('Failed to parse server message');
-    }
+  // Keep the latest onMessage callback in a ref to avoid recreating connections
+  useEffect(() => {
+    onMessageRef.current = onMessage;
   }, [onMessage]);
-
-  const handleError = useCallback((event: Event) => {
-    setIsConnected(false);
-    setError('SSE connection error');
-    console.error('SSE error:', event);
-  }, []);
-
-  const handleOpen = useCallback(() => {
-    setIsConnected(true);
-    setError(null);
-  }, []);
 
   useEffect(() => {
     const eventSource = new EventSource(`${API_CONFIG.BASE_URL}${API_CONFIG.SSE_ENDPOINT}`);
     eventSourceRef.current = eventSource;
 
-    eventSource.onopen = handleOpen;
-    eventSource.onmessage = handleMessage;
-    eventSource.onerror = handleError;
+    eventSource.onopen = () => {
+      setIsConnected(true);
+      setError(null);
+    };
+
+    eventSource.onmessage = (event: MessageEvent) => {
+      try {
+        const message: SSEMessage = JSON.parse(event.data);
+        onMessageRef.current?.(message);
+      } catch (err) {
+        console.error('Failed to parse SSE message:', err);
+        setError('Failed to parse server message');
+      }
+    };
+
+    eventSource.onerror = (event: Event) => {
+      setIsConnected(false);
+      setError('SSE connection error');
+      console.error('SSE error:', event);
+    };
 
     return () => {
       eventSource.close();
       eventSourceRef.current = null;
     };
-  }, [handleOpen, handleMessage, handleError]);
+  }, []); // Empty dependency array - only create connection once
 
   const reconnect = useCallback(() => {
     if (eventSourceRef.current) {
